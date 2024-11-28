@@ -1,0 +1,29 @@
+name: Manual Trigger Java Workflow
+
+on:
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  setup-java-directory:
+    runs-on: ubuntu-latest # Define the runner environment
+    
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Install Java
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '18' # Specify the Java version you want to install
+          distribution: 'temurin' # Choose the Java distribution (e.g., temurin, adopt, zulu, etc.)
+
+      # Step 3: Create a directory with GitHub job name and run number
+      - name: Create directory
+        run: |
+          JOB_NAME="${{ github.job }}"
+          RUN_NUMBER="${{ github.run_number }}"
+          DIRECTORY_NAME="${JOB_NAME}-${RUN_NUMBER}"
+          mkdir "$DIRECTORY_NAME"
+          echo "Directory '$DIRECTORY_NAME' created."
